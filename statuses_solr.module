@@ -1,0 +1,47 @@
+<?php
+
+
+
+/**
+ * Implements hook_search_api_item_type_info().
+ * Adds each non-Drupal index from all supported servers as an item type.
+ */
+function statuses_solr_search_api_item_type_info() {
+  // @todo - Cache added types? Does search_api already do this?
+  $types = array();
+
+  $types['statuses'] = array(
+    'name' => 'Statuses', 
+    'datasource controller' => 'StatusesDataSourceController',
+  );
+
+  return $types;
+}
+
+
+/**
+ * Implementation of hook_statuses_delete().
+ */
+function statuses_solr_statuses_delete($status){
+  // Update search Index -- delete
+  if (module_exists('search_api')){
+    search_api_track_item_delete('statuses', array($status->sid));
+  }
+}
+
+/**
+ * Implements hook_statuses_save()
+ *
+ */
+function statuses_solr_statuses_save($status, $context, $edit, $options) {
+  // Update search Index - update
+  if (module_exists('search_api')){
+    if ($edit){
+      search_api_track_item_change('statuses', array($status->sid));
+    }else{
+      search_api_track_item_insert('statuses', array($status->sid));
+    }
+  }
+  
+    return $status;
+}

@@ -1,0 +1,10 @@
+name = Statuses SOLR   
+description = Statuses integration with search API -- Supports fbsmp indexing
+package = Statuses
+core = 7.x
+version = "7.x-1.x-dev"
+
+files[] = includes/statuses_datasource.inc
+
+dependencies[] = search_api
+dependencies[] = statuses
